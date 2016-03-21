@@ -3,4 +3,24 @@
     <string name="login">LOGIN</string>
     <string name="user_name">EMAIL</string>
     <string name="password">PASSWORD</string>
+
+    <string-array name="object_array">
+
+        <item>All Categories</item>
+
+        <item>Women</item>
+
+        <item>Men</item>
+
+        <item>Accessories</item>
+
+        <item>Home &amp; Decor</item>
+
+        <item>Sale</item>
+
+        <item>Vip</item>
+
+
+
+    </string-array>
 </resources>

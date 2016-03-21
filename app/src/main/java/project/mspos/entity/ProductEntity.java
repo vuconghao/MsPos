@@ -15,6 +15,16 @@ public class ProductEntity {
     private ArrayList<ProductImage> list_image;
     private ArrayList<ProductEntity> list_productRelated;
 
+    public ProductEntity(int mProductID, String mProductName, Boolean mProductStock, String mProductSymboy, float mProductPrice, String mProductDesciption, ArrayList<ProductImage> list_image) {
+        this.mProductID = mProductID;
+        this.mProductName = mProductName;
+        this.mProductStock = mProductStock;
+        this.mProductSymboy = mProductSymboy;
+        this.mProductPrice = mProductPrice;
+        this.mProductDesciption = mProductDesciption;
+        this.list_image = list_image;
+    }
+
     public int getmProductID() {
         return mProductID;
     }

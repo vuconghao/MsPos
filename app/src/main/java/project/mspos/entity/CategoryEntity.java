@@ -15,6 +15,13 @@ public class CategoryEntity {
 
     private ArrayList<ProductEntity> list_product;
 
+    public CategoryEntity(int mCategoryID, String mCategoryName, int mCategoryImage, ArrayList<ProductEntity> list_product) {
+        this.mCategoryID = mCategoryID;
+        this.mCategoryName = mCategoryName;
+        this.mCategoryImage = mCategoryImage;
+        this.list_product = list_product;
+    }
+
     public int getmCategoryID() {
         return mCategoryID;
     }

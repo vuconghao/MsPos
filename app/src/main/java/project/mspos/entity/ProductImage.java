@@ -7,6 +7,11 @@ public class ProductImage {
     private int mProductImageID;
     private int mProductImage;
 
+    public ProductImage(int mProductImageID, int mProductImage) {
+        this.mProductImageID = mProductImageID;
+        this.mProductImage = mProductImage;
+    }
+
     public int getmProductImageID() {
         return mProductImageID;
     }
