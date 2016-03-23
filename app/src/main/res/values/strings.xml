@@ -3,6 +3,8 @@
     <string name="login">LOGIN</string>
     <string name="user_name">EMAIL</string>
     <string name="password">PASSWORD</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 
     <string-array name="object_array">
 
