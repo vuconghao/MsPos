@@ -5,6 +5,13 @@
     <string name="password">PASSWORD</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="Cart">Cart</string>
+    <string name="add_customer">Add Customer</string>
+    <string name="delete_customer">Delete</string>
+    <string name="sub_total">Subtotal</string>
+    <string name="add_cart_discount">Add Cart Discount</string>
+    <string name="hold_cart">hold</string>
+    <string name="check_out_cart">Check out 0.000 $</string>
 
     <string-array name="object_array">
 

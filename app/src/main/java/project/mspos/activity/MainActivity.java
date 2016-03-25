@@ -2,6 +2,7 @@ package project.mspos.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import project.mspos.R;
 import project.mspos.fragments.FragmentDrawer;
 import project.mspos.fragments.FragmentGiridViewProduct;
+import project.mspos.fragments.Fragment_Order_Cart;
 import project.mspos.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     FrameLayout layoutLeft,layoutRight;
     private FragmentManager fragmentManager;
     private FragmentGiridViewProduct fragmentGiridViewProduct;
+    private Fragment_Order_Cart fragment_order_cart;
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
     private static final int MATCH_PARENT = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -35,18 +38,24 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         setupView();
         setInitialLayout();
         addListCategoryFragment();
+        addOrderCartFragment();
+    }
+
+    private void addOrderCartFragment() {
+        fragment_order_cart=new Fragment_Order_Cart();
+        FragmentTransaction fragmentTransaction = fragmentManager
+                .beginTransaction();
+        fragmentTransaction.add(R.id.frame_right,
+                fragment_order_cart);
+        fragmentTransaction.commit();
     }
 
     private void addListCategoryFragment() {
-        // Start a new FragmentTransaction
+        fragmentGiridViewProduct=new FragmentGiridViewProduct();
         FragmentTransaction fragmentTransaction = fragmentManager
                 .beginTransaction();
-
-        // Add the TitleFragment to the layout
         fragmentTransaction.add(R.id.frame_left,
                 fragmentGiridViewProduct);
-
-        // Commit the FragmentTransaction
         fragmentTransaction.commit();
     }
 
@@ -70,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         layoutLeft=(FrameLayout)findViewById(R.id.frame_left);
         layoutRight=(FrameLayout)findViewById(R.id.frame_right);
         fragmentManager=getFragmentManager();
-        fragmentGiridViewProduct=new FragmentGiridViewProduct();
     }
 
     @Override

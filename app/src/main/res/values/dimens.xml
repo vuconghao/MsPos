@@ -10,4 +10,12 @@
     <dimen name="image_product_width">80dp</dimen>
     <dimen name="image_nav_item_size">30dp</dimen>
     <dimen name="nav_drawer_width">260dp</dimen>
+    <dimen name="layout_header_cart_height">80dp</dimen>
+    <dimen name="spinner_category_and_search_padding">10dp</dimen>
+    <dimen name="layout_customer_height">80dp</dimen>
+    <dimen name="button_delete_margin">10dp</dimen>
+    <dimen name="recycler_view_product_height">300dp</dimen>
+    <dimen name="layout_customer_checkout_height">80dp</dimen>
+    <dimen name="layout_customer_checkout_padding">8dp</dimen>
+    <dimen name="tv_img_product_in_cart_margin_left">10dp</dimen>
 </resources>
