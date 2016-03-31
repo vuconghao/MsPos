@@ -18,7 +18,6 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder implements View
     public TextView textViewProductName;
     public RecyclerViewHolders(View itemView) {
         super(itemView);
-        itemView.setOnClickListener(this);
         imageProduct=(ImageView)itemView.findViewById(R.id.image_product);
         textViewProductId=(TextView)itemView.findViewById(R.id.textview_product_id);
         textViewProductName=(TextView)itemView.findViewById(R.id.textview_prduct_name);

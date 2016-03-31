@@ -1,10 +1,12 @@
 package project.mspos.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import project.mspos.R;
+import project.mspos.activity.MainActivity;
 import project.mspos.adapter.GridViewProductAdapter;
 import project.mspos.entity.CategoryEntity;
 import project.mspos.entity.ProductEntity;
 import project.mspos.entity.ProductImage;
+import project.mspos.entity.ProductInCartItem;
+import project.mspos.utils.RecyclerItemClickListener;
 
 /**
  * Created by SON on 3/21/2016.
@@ -33,6 +38,7 @@ public class FragmentGiridViewProduct extends Fragment {
     private ArrayList<ProductEntity> listProduct;
     private ArrayList<CategoryEntity> listCategory;
     private List<String> listCategoryName;
+    AddProductInCartInterface mCallBack;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,16 +54,17 @@ public class FragmentGiridViewProduct extends Fragment {
         setupView();
         setAdapterForRecyclerView();
         setAdapterForSpinner();
+        registerForEvent();
 
     }
 
-    private void setAdapterForSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,listCategoryName);
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallBack=(AddProductInCartInterface)activity;
+    }
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinnerCategory.setAdapter(adapter);
-
+    private void registerForEvent() {
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -70,6 +77,25 @@ public class FragmentGiridViewProduct extends Fragment {
 
             }
         });
+        recyclerViewProduct.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        // TODO Handle item click
+                        ProductInCartItem product=new ProductInCartItem(listProduct.get(position).getList_image().get(0).getmProductImage(),listProduct.get(position).getmProductName(),1,listProduct.get(position).getmProductPrice());
+                        mCallBack.addProduct(product);
+                    }
+                })
+        );
+    }
+
+    private void setAdapterForSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,listCategoryName);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerCategory.setAdapter(adapter);
+
+
     }
 
     private void setDefaultListCategory() {
@@ -114,5 +140,9 @@ public class FragmentGiridViewProduct extends Fragment {
         listProduct.add(new ProductEntity(1,"sun glass 6",true,"",15.0f,"",listImageProduct));
         listProduct.add(new ProductEntity(1,"sun glass 7",true,"",15.0f,"",listImageProduct));
         listProduct.add(new ProductEntity(1,"sun glass 8",true,"",15.0f,"",listImageProduct));
+    }
+
+    public interface AddProductInCartInterface{
+        public void addProduct(ProductInCartItem productInCartItem);
     }
 }

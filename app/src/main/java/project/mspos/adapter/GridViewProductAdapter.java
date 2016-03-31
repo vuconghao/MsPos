@@ -1,5 +1,6 @@
 package project.mspos.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,9 +19,9 @@ import project.mspos.views.RecyclerViewHolders;
 public class GridViewProductAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
 
     private List<ProductEntity> itemList;
-    private Context context;
+    private Activity context;
 
-    public GridViewProductAdapter(Context context, List<ProductEntity> itemList) {
+    public GridViewProductAdapter(Activity context, List<ProductEntity> itemList) {
         this.itemList = itemList;
         this.context = context;
     }
@@ -36,7 +37,7 @@ public class GridViewProductAdapter extends RecyclerView.Adapter<RecyclerViewHol
     @Override
     public void onBindViewHolder(RecyclerViewHolders holder, int position) {
         holder.imageProduct.setImageResource(itemList.get(position).getList_image().get(0).getmProductImage());
-        holder.textViewProductId.setText(itemList.get(position).getmProductID()+"");
+        holder.textViewProductId.setText(itemList.get(position).getmProductID() + "");
         holder.textViewProductPrice.setText(itemList.get(position).getmProductPrice()+"$");
         holder.textViewProductName.setText(itemList.get(position).getmProductName());
     }

@@ -10,12 +10,29 @@
         android:src="@drawable/glass"
         android:layout_alignParentLeft="true"/>
     <TextView
-        android:id="@+id/tv_name_product_in_cart"
+        android:id="@+id/tv_number_product_in_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="0"
+        android:layout_toRightOf="@id/img_item_product_cart"
+        android:gravity="top"
+        android:textColor="@android:color/holo_red_light"/>
+    <TextView
+    android:id="@+id/tv_name_product_in_cart"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/tv_img_product_in_cart_margin_left"
+    android:text="sun glass"
+    android:layout_toRightOf="@id/img_item_product_cart"
+    android:gravity="center"/>
+    <TextView
+        android:id="@+id/tv_price_product_in_cart"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/tv_img_product_in_cart_margin_left"
         android:text="sun glass"
-        android:layout_toRightOf="@id/img_item_product_cart"
+        android:layout_toRightOf="@id/tv_name_product_in_cart"
+        android:layout_alignParentRight="true"
         android:gravity="center"/>
     <ImageView
         android:id="@+id/img_delete_product_item"

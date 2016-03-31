@@ -12,6 +12,24 @@
     <string name="add_cart_discount">Add Cart Discount</string>
     <string name="hold_cart">hold</string>
     <string name="check_out_cart">Check out 0.000 $</string>
+    <string name="Total_Product">Total Product:</string>
+    <string name="custom_sale">Custom Sale</string>
+    <string name="create_customer">Create Customer</string>
+    <string name="Search">Search</string>
+    <string name="Cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="address1">Addres Line 1</string>
+    <string name="address2">Address Line 2</string>
+    <string name="city">City</string>
+    <string name="zip">Zip</string>
+    <string name="choose_province">Please select state or provice</string>
+    <string name="company">Company</string>
+    <string name="Fax">Fax</string>
+    <string name="VATID">Vat ID</string>
 
     <string-array name="object_array">
 

@@ -2,7 +2,6 @@ package project.mspos.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,13 +11,20 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import project.mspos.R;
+import project.mspos.adapter.ListProductBoughtAdapter;
+import project.mspos.entity.CustomerEntity;
+import project.mspos.entity.ProductInCartItem;
+import project.mspos.fragments.CustomerInfoDialogFragment;
 import project.mspos.fragments.FragmentDrawer;
 import project.mspos.fragments.FragmentGiridViewProduct;
 import project.mspos.fragments.Fragment_Order_Cart;
 import project.mspos.utils.SessionManager;
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener,Fragment_Order_Cart.OpenDialogCustomerInteface,
+FragmentGiridViewProduct.AddProductInCartInterface,ListProductBoughtAdapter.DeleteProductInCartInterface{
     SessionManager session;
     FrameLayout layoutLeft,layoutRight;
     private FragmentManager fragmentManager;
@@ -27,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
     private static final int MATCH_PARENT = LinearLayout.LayoutParams.MATCH_PARENT;
+    public static ArrayList<CustomerEntity> listCustomer;
+    public static ArrayList<ProductInCartItem> listProductInCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +44,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         session=new SessionManager(MainActivity.this);
         session.checkLogin();
         setupView();
+        setDefaultData();
         setInitialLayout();
         addListCategoryFragment();
         addOrderCartFragment();
+    }
+
+    private void setDefaultData() {
+        CustomerEntity customer1=new CustomerEntity("Jack","Ma","1234","jackma@gmail.com","","","Beijing","","China","","Alibaba","","","");
+        listCustomer.add(customer1);
+        CustomerEntity customer2=new CustomerEntity("Steve","Jobs","1234","steve@gmail.com","","","Whashington","","USA","","Apple","","","");
+        listCustomer.add(customer2);
     }
 
     private void addOrderCartFragment() {
@@ -69,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     private void setupView() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         drawerFragment = (FragmentDrawer)
@@ -79,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         layoutLeft=(FrameLayout)findViewById(R.id.frame_left);
         layoutRight=(FrameLayout)findViewById(R.id.frame_right);
         fragmentManager=getFragmentManager();
+        listCustomer=new ArrayList<CustomerEntity>();
+        listProductInCart=new ArrayList<ProductInCartItem>();
     }
 
     @Override
@@ -99,5 +116,24 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             default:
                 break;
         }
+    }
+
+    @Override
+    public void openDialogCustomerInfo(int positionCustomer) {
+        FragmentManager fm = getFragmentManager();
+        CustomerInfoDialogFragment customerInfoDialogFragment =CustomerInfoDialogFragment.newInstance(positionCustomer);
+        customerInfoDialogFragment.show(fm,"");
+
+    }
+
+    @Override
+    public void addProduct(ProductInCartItem productInCartItem) {
+        fragment_order_cart.addProductInCart(productInCartItem);
+    }
+
+    @Override
+    public void deleteProductInCart(String productName) {
+        fragment_order_cart.deleteProductInCart(productName);
+
     }
 }
