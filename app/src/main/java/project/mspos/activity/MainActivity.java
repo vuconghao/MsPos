@@ -18,7 +18,9 @@ import project.mspos.R;
 import project.mspos.adapter.ListProductBoughtAdapter;
 import project.mspos.entity.CustomSale;
 import project.mspos.entity.CustomerEntity;
+import project.mspos.entity.DiscountEntity;
 import project.mspos.entity.ProductInCartItem;
+import project.mspos.fragments.CustomDiscountDialogFragment;
 import project.mspos.fragments.CustomSaleFragment;
 import project.mspos.fragments.CustomerInfoDialogFragment;
 import project.mspos.fragments.FragmentDrawer;
@@ -28,7 +30,7 @@ import project.mspos.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener,Fragment_Order_Cart.OpenDialogCustomerInteface,
 FragmentGiridViewProduct.AddProductInCartInterface,ListProductBoughtAdapter.DeleteProductInCartInterface,FragmentGiridViewProduct.AddCustomsaleInterface,
-CustomSaleFragment.AddCustomSaleToCartInterface{
+CustomSaleFragment.AddCustomSaleToCartInterface,Fragment_Order_Cart.OpenDialogCustomDiscountInterface{
     public static final int NO_CUSTOMER=-1;
     SessionManager session;
     FrameLayout layoutLeft,layoutRight;
@@ -177,5 +179,14 @@ CustomSaleFragment.AddCustomSaleToCartInterface{
         fragment_order_cart.addProductInCart(productInCartItem);
         customSaleFragment.dismiss();
 
+    }
+
+    @Override
+    public void openDialogCustomDiscount(DiscountEntity discountEntity) {
+        if(discountEntity.getNameDiscount().equals("")){
+            FragmentManager fm = getFragmentManager();
+            CustomDiscountDialogFragment customDiscountDialogFragment = CustomDiscountDialogFragment.newInstance(discountEntity);
+            customDiscountDialogFragment.show(fm,"");
+        }
     }
 }

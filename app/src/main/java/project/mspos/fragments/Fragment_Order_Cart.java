@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +21,8 @@ import project.mspos.R;
 import project.mspos.activity.MainActivity;
 import project.mspos.adapter.ListCustomerAdapter;
 import project.mspos.adapter.ListProductBoughtAdapter;
+import project.mspos.entity.DiscountEntity;
+import project.mspos.entity.DiscountType;
 import project.mspos.entity.ProductInCartItem;
 
 /**
@@ -33,10 +34,14 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
     ListView listViewProductInCart;
     ListProductBoughtAdapter listProductBoughtAdapter;
     RelativeLayout layout_customer_cart;
+    RelativeLayout layout_add_discount;
     PopupWindow popupWindow;
     OpenDialogCustomerInteface mCallback;
+    OpenDialogCustomDiscountInterface callBackOpenDiscountDialog;
     boolean popupWindowAlready=false;
     boolean popupCommentOrderAlready=false;
+    boolean discountAlready=false;
+    DiscountEntity currentDiscount=new DiscountEntity();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,12 +61,14 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mCallback=(OpenDialogCustomerInteface)activity;
+        callBackOpenDiscountDialog=(OpenDialogCustomDiscountInterface)activity;
     }
 
     private void registerForEvent() {
         layout_customer_cart.setOnClickListener(this);
         imageDeleteAllProduct.setOnClickListener(this);
         imageCommentCart.setOnClickListener(this);
+        layout_add_discount.setOnClickListener(this);
     }
 
     private void setAdapterForRecyclerView() {
@@ -75,6 +82,8 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         layout_customer_cart=(RelativeLayout)getActivity().findViewById(R.id.layout_customer_cart);
         imageDeleteAllProduct=(ImageView)getActivity().findViewById(R.id.img_delete_cart);
         imageCommentCart=(ImageView)getActivity().findViewById(R.id.img_comment_cart);
+        layout_add_discount=(RelativeLayout)getActivity().findViewById(R.id.layout_add_cart_discount);
+
     }
 
     @Override
@@ -82,6 +91,9 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         switch (v.getId()){
             case R.id.layout_customer_cart:
                 addListCustomerDiaLog();
+                break;
+            case R.id.layout_add_cart_discount:
+                addOrEditDiscount(discountAlready);
                 break;
             case R.id.button_create_customer:
                 mCallback.openDialogCustomerInfo(MainActivity.NO_CUSTOMER);
@@ -99,6 +111,12 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
 
         }
         
+    }
+
+    private void addOrEditDiscount(boolean discountAlready) {
+        if(!discountAlready){
+            callBackOpenDiscountDialog.openDialogCustomDiscount(new DiscountEntity("", DiscountType.MONEY,0.0f,""));
+        }
     }
 
     private void showCommentDialog() {
@@ -166,6 +184,10 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
 
     public interface OpenDialogCustomerInteface{
         public void openDialogCustomerInfo(int positionCustomer);
+    }
+
+    public interface OpenDialogCustomDiscountInterface{
+        public void openDialogCustomDiscount(DiscountEntity discountEntity);
     }
 
     public void addProductInCart(ProductInCartItem productInCartItem){

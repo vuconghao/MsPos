@@ -38,6 +38,14 @@
     <string name="TaxclassId">Tax Class Id</string>
     <string name="quantity">Quantity</string>
     <string name="add_to_cart">Add To Cart</string>
+    <string name="discount_max">Discount-Maximum 100%</string>
+    <string name="remove_discount">Remove Discount</string>
+    <string name="apply">Apply</string>
+    <string name="custom_discount">Custom Discount</string>
+    <string name="discount_type">Discount Type</string>
+    <string name="amount">Amount</string>
+    <string name="discount_code">Discount Code</string>
+    <string name="CouponCode">Coupon Code</string>
 
     <string-array name="object_array">
 
