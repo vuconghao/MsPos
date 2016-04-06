@@ -40,7 +40,7 @@ public class CustomerInfoDialogFragment extends DialogFragment implements View.O
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView=inflater.inflate(R.layout.layout_information_customer,container,false);
+        View rootView=inflater.inflate(R.layout.layout_information_customer, container, false);
         setUpView(rootView);
         displayInfomationCustomer();
         return rootView;
@@ -48,17 +48,19 @@ public class CustomerInfoDialogFragment extends DialogFragment implements View.O
 
     private void displayInfomationCustomer() {
         int positionCustomer=getArguments().getInt(POSITION_CUSTOMER,0);
-        editFirstName.setText(listCustomer.get(positionCustomer).getFirstName());
-        editLastName.setText(listCustomer.get(positionCustomer).getLastName());
-        editEmail.setText(listCustomer.get(positionCustomer).getEmail());
-        editPhone.setText(listCustomer.get(positionCustomer).getPhone());
-        editAddressLine1.setText(listCustomer.get(positionCustomer).getAddressLine1());
-        editAddressLine2.setText(listCustomer.get(positionCustomer).getAddressLine2());
-        editCity.setText(listCustomer.get(positionCustomer).getCity());
-        editZip.setText(listCustomer.get(positionCustomer).getZipId());
-        editCompany.setText(listCustomer.get(positionCustomer).getCompany());
-        editFax.setText(listCustomer.get(positionCustomer).getFax());
-        editVatId.setText(listCustomer.get(positionCustomer).getVATId());
+        if(positionCustomer!=MainActivity.NO_CUSTOMER) {
+            editFirstName.setText(listCustomer.get(positionCustomer).getFirstName());
+            editLastName.setText(listCustomer.get(positionCustomer).getLastName());
+            editEmail.setText(listCustomer.get(positionCustomer).getEmail());
+            editPhone.setText(listCustomer.get(positionCustomer).getPhone());
+            editAddressLine1.setText(listCustomer.get(positionCustomer).getAddressLine1());
+            editAddressLine2.setText(listCustomer.get(positionCustomer).getAddressLine2());
+            editCity.setText(listCustomer.get(positionCustomer).getCity());
+            editZip.setText(listCustomer.get(positionCustomer).getZipId());
+            editCompany.setText(listCustomer.get(positionCustomer).getCompany());
+            editFax.setText(listCustomer.get(positionCustomer).getFax());
+            editVatId.setText(listCustomer.get(positionCustomer).getVATId());
+        }
 
     }
 

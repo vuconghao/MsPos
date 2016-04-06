@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import project.mspos.R;
 import project.mspos.activity.MainActivity;
@@ -26,12 +28,15 @@ import project.mspos.entity.ProductInCartItem;
  * Created by SON on 3/25/2016.
  */
 public class Fragment_Order_Cart extends Fragment implements View.OnClickListener {
+    ImageView imageDeleteAllProduct;
+    ImageView imageCommentCart;
     ListView listViewProductInCart;
     ListProductBoughtAdapter listProductBoughtAdapter;
     RelativeLayout layout_customer_cart;
     PopupWindow popupWindow;
     OpenDialogCustomerInteface mCallback;
     boolean popupWindowAlready=false;
+    boolean popupCommentOrderAlready=false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +60,8 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
 
     private void registerForEvent() {
         layout_customer_cart.setOnClickListener(this);
+        imageDeleteAllProduct.setOnClickListener(this);
+        imageCommentCart.setOnClickListener(this);
     }
 
     private void setAdapterForRecyclerView() {
@@ -66,19 +73,58 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
     private void setupView() {
         listViewProductInCart=(ListView)getActivity().findViewById(R.id.recycle_view_product_in_cart);
         layout_customer_cart=(RelativeLayout)getActivity().findViewById(R.id.layout_customer_cart);
+        imageDeleteAllProduct=(ImageView)getActivity().findViewById(R.id.img_delete_cart);
+        imageCommentCart=(ImageView)getActivity().findViewById(R.id.img_comment_cart);
     }
 
     @Override
     public void onClick(View v) {
-        if(popupWindowAlready){
-            popupWindow.setFocusable(false);
-            popupWindow.dismiss();
-        }
         switch (v.getId()){
             case R.id.layout_customer_cart:
                 addListCustomerDiaLog();
+                break;
+            case R.id.button_create_customer:
+                mCallback.openDialogCustomerInfo(MainActivity.NO_CUSTOMER);
+                break;
+            case R.id.img_delete_cart:
+                MainActivity.listProductInCart.clear();
+                listProductBoughtAdapter.notifyDataSetChanged();
+                break;
+            case R.id.img_comment_cart:
+                showCommentDialog();
+                break;
+            case R.id.button_save_comment_order:
+                Toast.makeText(getActivity(),"Order comment saved",Toast.LENGTH_SHORT).show();
+                break;
+
         }
         
+    }
+
+    private void showCommentDialog() {
+        popupCommentOrderAlready=true;
+        LayoutInflater layoutInflater
+                = (LayoutInflater)getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.layout_comment_order, null);
+        popupWindow = new PopupWindow(
+                popupView,
+                800,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        Button btSave=(Button)popupView.findViewById(R.id.button_save_comment_order);
+        EditText editComment=(EditText)popupView.findViewById(R.id.edittext_comment_order);
+        ImageView imgBack=(ImageView)popupView.findViewById(R.id.button_Comment_Order_Back);
+        popupView.setFocusable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.showAsDropDown(imageCommentCart);
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.setFocusable(false);
+                popupWindow.dismiss();
+            }
+        });
+        btSave.setOnClickListener(this);
     }
 
     private void addListCustomerDiaLog() {
@@ -90,7 +136,7 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         popupWindow = new PopupWindow(
                 popupView,
                 800,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         Button btCreateCustomer=(Button)popupView.findViewById(R.id.button_create_customer);
         EditText editSearchCustomer=(EditText)popupView.findViewById(R.id.edit_text_search_customer);
         ImageView imgBack=(ImageView)popupView.findViewById(R.id.img_list_customer_back);
@@ -99,7 +145,7 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         ListView listCustomerView=(ListView)popupView.findViewById(R.id.list_customer);
         ListCustomerAdapter listCustomerAdapter=new ListCustomerAdapter(getActivity(),R.layout.list_customer_item,MainActivity.listCustomer);
         listCustomerView.setAdapter(listCustomerAdapter);
-        popupWindow.showAsDropDown(layout_customer_cart, -800, -30);
+        popupWindow.showAsDropDown(layout_customer_cart);
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +159,7 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
                 mCallback.openDialogCustomerInfo(position);
             }
         });
+        btCreateCustomer.setOnClickListener(this);
 
 
     }

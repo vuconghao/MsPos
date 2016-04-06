@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -34,11 +35,13 @@ import project.mspos.utils.RecyclerItemClickListener;
 public class FragmentGiridViewProduct extends Fragment {
     private RecyclerView recyclerViewProduct;
     private Spinner spinnerCategory;
+    private Button btnCustomSale;
     private GridLayoutManager gridLayoutManager;
     private ArrayList<ProductEntity> listProduct;
     private ArrayList<CategoryEntity> listCategory;
     private List<String> listCategoryName;
     AddProductInCartInterface mCallBack;
+    AddCustomsaleInterface customsalecallBack;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class FragmentGiridViewProduct extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mCallBack=(AddProductInCartInterface)activity;
+        customsalecallBack=(AddCustomsaleInterface)activity;
     }
 
     private void registerForEvent() {
@@ -81,11 +85,17 @@ public class FragmentGiridViewProduct extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
                         // TODO Handle item click
-                        ProductInCartItem product=new ProductInCartItem(listProduct.get(position).getList_image().get(0).getmProductImage(),listProduct.get(position).getmProductName(),1,listProduct.get(position).getmProductPrice());
+                        ProductInCartItem product = new ProductInCartItem(listProduct.get(position).getList_image().get(0).getmProductImage(), listProduct.get(position).getmProductName(), 1, listProduct.get(position).getmProductPrice());
                         mCallBack.addProduct(product);
                     }
                 })
         );
+        btnCustomSale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customsalecallBack.addCustomSale();
+            }
+        });
     }
 
     private void setAdapterForSpinner() {
@@ -126,6 +136,7 @@ public class FragmentGiridViewProduct extends Fragment {
         spinnerCategory=(Spinner)getActivity().findViewById(R.id.spinner_category);
         recyclerViewProduct.setHasFixedSize(true);
         recyclerViewProduct.setLayoutManager(gridLayoutManager);
+        btnCustomSale=(Button)getActivity().findViewById(R.id.button_custom_sale);
     }
 
     private void setDefaultListProduct(){
@@ -144,5 +155,8 @@ public class FragmentGiridViewProduct extends Fragment {
 
     public interface AddProductInCartInterface{
         public void addProduct(ProductInCartItem productInCartItem);
+    }
+    public interface AddCustomsaleInterface{
+        public void addCustomSale();
     }
 }

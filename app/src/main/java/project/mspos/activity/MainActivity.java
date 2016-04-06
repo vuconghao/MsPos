@@ -2,6 +2,7 @@ package project.mspos.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +16,10 @@ import java.util.ArrayList;
 
 import project.mspos.R;
 import project.mspos.adapter.ListProductBoughtAdapter;
+import project.mspos.entity.CustomSale;
 import project.mspos.entity.CustomerEntity;
 import project.mspos.entity.ProductInCartItem;
+import project.mspos.fragments.CustomSaleFragment;
 import project.mspos.fragments.CustomerInfoDialogFragment;
 import project.mspos.fragments.FragmentDrawer;
 import project.mspos.fragments.FragmentGiridViewProduct;
@@ -24,17 +27,21 @@ import project.mspos.fragments.Fragment_Order_Cart;
 import project.mspos.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener,Fragment_Order_Cart.OpenDialogCustomerInteface,
-FragmentGiridViewProduct.AddProductInCartInterface,ListProductBoughtAdapter.DeleteProductInCartInterface{
+FragmentGiridViewProduct.AddProductInCartInterface,ListProductBoughtAdapter.DeleteProductInCartInterface,FragmentGiridViewProduct.AddCustomsaleInterface,
+CustomSaleFragment.AddCustomSaleToCartInterface{
+    public static final int NO_CUSTOMER=-1;
     SessionManager session;
     FrameLayout layoutLeft,layoutRight;
     private FragmentManager fragmentManager;
     private FragmentGiridViewProduct fragmentGiridViewProduct;
     private Fragment_Order_Cart fragment_order_cart;
+    CustomSaleFragment customSaleFragment;
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
     private static final int MATCH_PARENT = LinearLayout.LayoutParams.MATCH_PARENT;
     public static ArrayList<CustomerEntity> listCustomer;
     public static ArrayList<ProductInCartItem> listProductInCart;
+    private boolean doubleBackToExitPressedOnce=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +128,7 @@ FragmentGiridViewProduct.AddProductInCartInterface,ListProductBoughtAdapter.Dele
     @Override
     public void openDialogCustomerInfo(int positionCustomer) {
         FragmentManager fm = getFragmentManager();
-        CustomerInfoDialogFragment customerInfoDialogFragment =CustomerInfoDialogFragment.newInstance(positionCustomer);
+        CustomerInfoDialogFragment customerInfoDialogFragment = CustomerInfoDialogFragment.newInstance(positionCustomer);
         customerInfoDialogFragment.show(fm,"");
 
     }
@@ -134,6 +141,41 @@ FragmentGiridViewProduct.AddProductInCartInterface,ListProductBoughtAdapter.Dele
     @Override
     public void deleteProductInCart(String productName) {
         fragment_order_cart.deleteProductInCart(productName);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            finish();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
+
+    @Override
+    public void addCustomSale() {
+        FragmentManager fm = getFragmentManager();
+        customSaleFragment = new CustomSaleFragment();
+        customSaleFragment.show(fm,"");
+    }
+
+    @Override
+    public void addCustomSaleToCart(CustomSale customSale) {
+        ProductInCartItem productInCartItem=new ProductInCartItem(R.drawable.thumbnail,customSale.getName(),customSale.getQuantity(),customSale.getPrice()*customSale.getQuantity());
+        fragment_order_cart.addProductInCart(productInCartItem);
+        customSaleFragment.dismiss();
 
     }
 }
