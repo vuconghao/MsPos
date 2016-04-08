@@ -6,7 +6,7 @@
 <LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:padding="@dimen/padding_dialog_discount">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_header_cart_height">

@@ -30,7 +30,7 @@ import project.mspos.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener,Fragment_Order_Cart.OpenDialogCustomerInteface,
 FragmentGiridViewProduct.AddProductInCartInterface,ListProductBoughtAdapter.DeleteProductInCartInterface,FragmentGiridViewProduct.AddCustomsaleInterface,
-CustomSaleFragment.AddCustomSaleToCartInterface,Fragment_Order_Cart.OpenDialogCustomDiscountInterface{
+CustomSaleFragment.AddCustomSaleToCartInterface,Fragment_Order_Cart.OpenDialogCustomDiscountInterface,CustomDiscountDialogFragment.ApplyDiscountInterface{
     public static final int NO_CUSTOMER=-1;
     SessionManager session;
     FrameLayout layoutLeft,layoutRight;
@@ -43,6 +43,7 @@ CustomSaleFragment.AddCustomSaleToCartInterface,Fragment_Order_Cart.OpenDialogCu
     private static final int MATCH_PARENT = LinearLayout.LayoutParams.MATCH_PARENT;
     public static ArrayList<CustomerEntity> listCustomer;
     public static ArrayList<ProductInCartItem> listProductInCart;
+    public static ArrayList<DiscountEntity> listDiscount;
     private boolean doubleBackToExitPressedOnce=false;
 
     @Override
@@ -105,6 +106,7 @@ CustomSaleFragment.AddCustomSaleToCartInterface,Fragment_Order_Cart.OpenDialogCu
         fragmentManager=getFragmentManager();
         listCustomer=new ArrayList<CustomerEntity>();
         listProductInCart=new ArrayList<ProductInCartItem>();
+        listDiscount=new ArrayList<DiscountEntity>();
     }
 
     @Override
@@ -183,10 +185,18 @@ CustomSaleFragment.AddCustomSaleToCartInterface,Fragment_Order_Cart.OpenDialogCu
 
     @Override
     public void openDialogCustomDiscount(DiscountEntity discountEntity) {
-        if(discountEntity.getNameDiscount().equals("")){
-            FragmentManager fm = getFragmentManager();
-            CustomDiscountDialogFragment customDiscountDialogFragment = CustomDiscountDialogFragment.newInstance(discountEntity);
-            customDiscountDialogFragment.show(fm,"");
-        }
+        FragmentManager fm = getFragmentManager();
+        CustomDiscountDialogFragment customDiscountDialogFragment = CustomDiscountDialogFragment.newInstance(discountEntity);
+        customDiscountDialogFragment.show(fm,"");
+    }
+
+    @Override
+    public void applyDiscountDone(DiscountEntity discount) {
+        fragment_order_cart.addDiscount(discount);
+    }
+
+    @Override
+    public void removeDiscount() {
+        fragment_order_cart.removeDiscount();
     }
 }

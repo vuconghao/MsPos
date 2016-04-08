@@ -46,6 +46,7 @@
     <string name="amount">Amount</string>
     <string name="discount_code">Discount Code</string>
     <string name="CouponCode">Coupon Code</string>
+    <string name="amount_discount">0.00</string>
 
     <string-array name="object_array">
 

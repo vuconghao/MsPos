@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import project.mspos.R;
@@ -29,6 +30,9 @@ import project.mspos.entity.ProductInCartItem;
  * Created by SON on 3/25/2016.
  */
 public class Fragment_Order_Cart extends Fragment implements View.OnClickListener {
+    ImageView imgAddDiscount;
+    TextView tvDiscountName;
+    TextView tvAmountDiscount;
     ImageView imageDeleteAllProduct;
     ImageView imageCommentCart;
     ListView listViewProductInCart;
@@ -83,7 +87,9 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         imageDeleteAllProduct=(ImageView)getActivity().findViewById(R.id.img_delete_cart);
         imageCommentCart=(ImageView)getActivity().findViewById(R.id.img_comment_cart);
         layout_add_discount=(RelativeLayout)getActivity().findViewById(R.id.layout_add_cart_discount);
-
+        imgAddDiscount=(ImageView)getActivity().findViewById(R.id.button_add_cart_discount);
+        tvDiscountName=(TextView)getActivity().findViewById(R.id.tv_name_discount_cart);
+        tvAmountDiscount=(TextView)getActivity().findViewById(R.id.tv_Discount_Amount_Cart);
     }
 
     @Override
@@ -116,6 +122,8 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
     private void addOrEditDiscount(boolean discountAlready) {
         if(!discountAlready){
             callBackOpenDiscountDialog.openDialogCustomDiscount(new DiscountEntity("", DiscountType.MONEY,0.0f,""));
+        }else {
+            callBackOpenDiscountDialog.openDialogCustomDiscount(currentDiscount);
         }
     }
 
@@ -180,6 +188,28 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         btCreateCustomer.setOnClickListener(this);
 
 
+    }
+
+    public void addDiscount(DiscountEntity discount) {
+        discountAlready=true;
+        imgAddDiscount.setVisibility(View.GONE);
+        tvAmountDiscount.setVisibility(View.VISIBLE);
+        tvDiscountName.setText(discount.getNameDiscount());
+        if(discount.getDiscountType()==DiscountType.MONEY)
+            tvAmountDiscount.setText(discount.getAmount()+"$");
+        currentDiscount=discount;
+
+    }
+
+    public void removeDiscount() {
+        if(discountAlready){
+            discountAlready=false;
+            imgAddDiscount.setVisibility(View.VISIBLE);
+            tvAmountDiscount.setVisibility(View.GONE);
+            tvAmountDiscount.setText("");
+            tvDiscountName.setText("Add Discount");
+            currentDiscount=new DiscountEntity();
+        }
     }
 
     public interface OpenDialogCustomerInteface{

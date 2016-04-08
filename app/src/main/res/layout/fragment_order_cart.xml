@@ -104,12 +104,13 @@
         android:background="@color/light_grey"
         android:padding="@dimen/layout_customer_checkout_padding">
         <TextView
+            android:id="@+id/tv_name_discount_cart"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/add_cart_discount"
             android:gravity="center"/>
         <TextView
-            android:id="@+id/tv_Discount_Amount"
+            android:id="@+id/tv_Discount_Amount_Cart"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/amount"
