@@ -35,16 +35,25 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
     TextView tvAmountDiscount;
     ImageView imageDeleteAllProduct;
     ImageView imageCommentCart;
+    TextView tvTotalPrice;
     ListView listViewProductInCart;
     ListProductBoughtAdapter listProductBoughtAdapter;
     RelativeLayout layout_customer_cart;
     RelativeLayout layout_add_discount;
+    RelativeLayout layout_tax;
+    TextView tvAmountTax;
     PopupWindow popupWindow;
+    Button buttonCheckOut;
     OpenDialogCustomerInteface mCallback;
     OpenDialogCustomDiscountInterface callBackOpenDiscountDialog;
+    float totalPrice=0;
+    float discount=0;
+    float tax=0;
+    float realPrice=0;
     boolean popupWindowAlready=false;
     boolean popupCommentOrderAlready=false;
     boolean discountAlready=false;
+    boolean productAlready=false;
     DiscountEntity currentDiscount=new DiscountEntity();
     @Nullable
     @Override
@@ -73,6 +82,36 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         imageDeleteAllProduct.setOnClickListener(this);
         imageCommentCart.setOnClickListener(this);
         layout_add_discount.setOnClickListener(this);
+        listViewProductInCart.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                addPopUpWindowCustomPriceDiscount(position);
+            }
+        });
+    }
+
+    private void addPopUpWindowCustomPriceDiscount(int positionProduct) {
+        LayoutInflater layoutInflater
+                = (LayoutInflater)getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.dialog_custom_price_product_bought, null);
+        popupWindow = new PopupWindow(
+                popupView,
+                800,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        EditText editNumberProduct=(EditText)popupView.findViewById(R.id.edit_number_product_bought);
+        TextView tvProductName=(TextView)popupView.findViewById(R.id.tv_prouduct_bought_name_custom_price);
+        Button btSubtractProduct=(Button)popupView.findViewById(R.id.bt_substract_product_bought);
+        Button btAddProduct=(Button)popupView.findViewById(R.id.bt_add_product_bought);
+        Button btCustomPrice=(Button)popupView.findViewById(R.id.button_custom_price);
+        Button btDiscount=(Button)popupView.findViewById(R.id.button_custom_discount);
+        RelativeLayout layoutDiscountOrCustomPrice=(RelativeLayout)popupView.findViewById(R.id.layout_discount_or_custom_price);
+        ProductInCartItem currentProduct=MainActivity.listProductInCart.get(positionProduct);
+
+        editNumberProduct.setText(currentProduct.getNumberProduct()+"");
+        tvProductName.setText(currentProduct.getNameProduct());
+        popupWindow.showAsDropDown(listViewProductInCart);
+
     }
 
     private void setAdapterForRecyclerView() {
@@ -90,6 +129,10 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         imgAddDiscount=(ImageView)getActivity().findViewById(R.id.button_add_cart_discount);
         tvDiscountName=(TextView)getActivity().findViewById(R.id.tv_name_discount_cart);
         tvAmountDiscount=(TextView)getActivity().findViewById(R.id.tv_Discount_Amount_Cart);
+        tvTotalPrice=(TextView)getActivity().findViewById(R.id.tv_total_price);
+        layout_tax=(RelativeLayout)getActivity().findViewById(R.id.layout_tax);
+        tvAmountTax=(TextView)getActivity().findViewById(R.id.tv_Amount_Tax);
+        buttonCheckOut=(Button)getActivity().findViewById(R.id.btCheckoutCart);
     }
 
     @Override
@@ -195,8 +238,15 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         imgAddDiscount.setVisibility(View.GONE);
         tvAmountDiscount.setVisibility(View.VISIBLE);
         tvDiscountName.setText(discount.getNameDiscount());
-        if(discount.getDiscountType()==DiscountType.MONEY)
-            tvAmountDiscount.setText(discount.getAmount()+"$");
+        if(discount.getDiscountType()==DiscountType.MONEY) {
+            tvAmountDiscount.setText(discount.getAmount() + "$");
+            this.discount=discount.getAmount();
+        }
+        else{
+            float discountAmount=discount.getAmount()*totalPrice/100;
+            tvAmountDiscount.setText(discountAmount+"$");
+            this.discount=discountAmount;
+        }
         currentDiscount=discount;
 
     }
@@ -221,6 +271,9 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
     }
 
     public void addProductInCart(ProductInCartItem productInCartItem){
+        productAlready=true;
+        totalPrice+=productInCartItem.getPriceProduct();
+        tvTotalPrice.setText(totalPrice+"$");
         boolean isNewProduct=true;
         for(int i=0;i<MainActivity.listProductInCart.size();i++){
             if(MainActivity.listProductInCart.get(i).getNameProduct().equals(productInCartItem.getNameProduct())){
@@ -233,15 +286,41 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
             MainActivity.listProductInCart.add(productInCartItem);
         }
         listProductBoughtAdapter.notifyDataSetChanged();
+        updateLayoutTax();
+        updateRealPrice();
+    }
+
+    private void updateRealPrice() {
+        realPrice=totalPrice-discount+tax;
+        buttonCheckOut.setText("Checkout "+realPrice+"$");
+
+    }
+
+    private void updateLayoutTax() {
+        if(productAlready){
+            layout_tax.setVisibility(View.VISIBLE);
+            tax=(totalPrice-discount)*0.1f;
+            tvAmountTax.setText(tax+"$");
+        }else {
+            tax=0;
+            layout_tax.setVisibility(View.GONE);
+            tvAmountTax.setText("");
+        }
     }
 
     public void deleteProductInCart(String productInCartName){
         for(int i=0;i<MainActivity.listProductInCart.size();i++){
             if(MainActivity.listProductInCart.get(i).getNameProduct().equals(productInCartName)){
+                totalPrice-=MainActivity.listProductInCart.get(i).getPriceProduct();
                 MainActivity.listProductInCart.remove(i);
-            }
+                }
         }
         listProductBoughtAdapter.notifyDataSetChanged();
+        if(MainActivity.listProductInCart.isEmpty())
+            productAlready=false;
+        tvTotalPrice.setText(totalPrice + "$");
+        updateLayoutTax();
+        updateRealPrice();
     }
 
 
