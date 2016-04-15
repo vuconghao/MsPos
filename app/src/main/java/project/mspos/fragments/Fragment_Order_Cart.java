@@ -119,6 +119,12 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         listViewProductInCart.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(popupWindowTwo!=null){
+                    popupWindowTwo.dismiss();
+                }
+                if(popupWindowOne!=null){
+                    popupWindowOne.dismiss();
+                }
                 addPopUpWindowCustomPriceDiscount(position);
             }
         });
@@ -239,6 +245,12 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
+        if(popupWindowTwo!=null){
+            popupWindowTwo.dismiss();
+        }
+        if(popupWindowOne!=null){
+            popupWindowOne.dismiss();
+        }
         switch (v.getId()){
             case R.id.layout_customer_cart:
                 addListCustomerDiaLog();
@@ -324,26 +336,31 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
 
     private void substractCurrentProduct() {
         int numberCurrentProduct=MainActivity.listProductInCart.get(positionSelectionProduct).getNumberProduct();
-        if(numberCurrentProduct>1) {
+        if(numberCurrentProduct>=1) {
             float newTotalPrice = MainActivity.listProductInCart.get(positionSelectionProduct).getPriceProduct() / numberCurrentProduct * (numberCurrentProduct -1);
             numberCurrentProduct--;
             editNumberProduct.setText(numberCurrentProduct+"");
             selectionProductPrice=newTotalPrice;
             MainActivity.listProductInCart.get(positionSelectionProduct).setPriceProduct(newTotalPrice);
             MainActivity.listProductInCart.get(positionSelectionProduct).setNumberProduct(numberCurrentProduct);
+            if(numberCurrentProduct==0){
+                MainActivity.listProductInCart.remove(positionSelectionProduct);
+            }
             listProductBoughtAdapter.notifyDataSetChanged();
         }
     }
 
     private void addCurrentProduct() {
         int numberCurrentProduct=MainActivity.listProductInCart.get(positionSelectionProduct).getNumberProduct();
-        float newTotalPrice=MainActivity.listProductInCart.get(positionSelectionProduct).getPriceProduct()/numberCurrentProduct*(numberCurrentProduct+1);
-        numberCurrentProduct++;
-        editNumberProduct.setText(numberCurrentProduct+"");
-        selectionProductPrice=newTotalPrice;
-        MainActivity.listProductInCart.get(positionSelectionProduct).setPriceProduct(newTotalPrice);
-        MainActivity.listProductInCart.get(positionSelectionProduct).setNumberProduct(numberCurrentProduct);
-        listProductBoughtAdapter.notifyDataSetChanged();
+        if(numberCurrentProduct!=0) {
+            float newTotalPrice = MainActivity.listProductInCart.get(positionSelectionProduct).getPriceProduct() / numberCurrentProduct * (numberCurrentProduct + 1);
+            numberCurrentProduct++;
+            editNumberProduct.setText(numberCurrentProduct + "");
+            selectionProductPrice = newTotalPrice;
+            MainActivity.listProductInCart.get(positionSelectionProduct).setPriceProduct(newTotalPrice);
+            MainActivity.listProductInCart.get(positionSelectionProduct).setNumberProduct(numberCurrentProduct);
+            listProductBoughtAdapter.notifyDataSetChanged();
+        }
     }
 
     private void doneCustomPriceOrDiscount() {
