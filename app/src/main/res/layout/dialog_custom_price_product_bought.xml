@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/gray_light">
     <Button
         android:id="@+id/btCloseDialogCustomPrice"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/button_delete_size"
+        android:layout_height="@dimen/button_delete_size"
         android:background="@android:drawable/ic_delete"
         />
     <TextView
@@ -35,14 +36,15 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_customer_height"
+        android:layout_height="@dimen/layout_substract_add_product_boutght_height"
         android:layout_margin="@dimen/padding_button_cancel_save_customer">
         <Button
             android:id="@+id/bt_substract_product_bought"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/layout_substract_add_product_boutght_height"
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
             android:text="-"
+            android:gravity="center"
             android:textSize="@dimen/subtract_text_size"
             android:textStyle="bold"/>
         <EditText
@@ -54,11 +56,12 @@
             android:background="@drawable/border_edittext"/>
         <Button
             android:id="@+id/bt_add_product_bought"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/layout_substract_add_product_boutght_height"
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
             android:text="+"
             android:textSize="@dimen/subtract_text_size"
+            android:gravity="center"
             android:textStyle="bold"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
@@ -70,7 +73,7 @@
         />
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_header_cart_height"
+        android:layout_height="@dimen/layout_substract_add_product_boutght_height"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin">
         <Button
@@ -96,7 +99,7 @@
     <RelativeLayout
         android:id="@+id/layout_discount_or_custom_price"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_header_cart_height">
+        android:layout_height="@dimen/layout_substract_add_product_boutght_height">
         <TextView
             android:id="@+id/tv_discount_or_custom_price"
             android:layout_width="wrap_content"
@@ -123,7 +126,7 @@
     <TextView
         android:id="@+id/tv_option_custom_price"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_header_cart_height"
+        android:layout_height="@dimen/layout_substract_add_product_boutght_height"
         android:text="@string/option"
         android:gravity="center|left"
         android:textStyle="bold"/>

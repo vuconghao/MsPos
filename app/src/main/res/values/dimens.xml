@@ -28,8 +28,10 @@
     <dimen name="customSaleEditNameWidth">150dp</dimen>
     <dimen name="price_custom_sale_size">40sp</dimen>
     <dimen name="padding_dialog_discount">5dp</dimen>
-    <dimen name="height_image_product_bought">165dp</dimen>
-    <dimen name="subtract_text_size">50sp</dimen>
+    <dimen name="height_image_product_bought">80dp</dimen>
+    <dimen name="subtract_text_size">20sp</dimen>
     <dimen name="edit_number_product_bought_width">250px</dimen>
     <dimen name="button_back_size">80dp</dimen>
+    <dimen name="layout_substract_add_product_boutght_height">40dp</dimen>
+    <dimen name="button_delete_size">40dp</dimen>
 </resources>
