@@ -146,6 +146,7 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         Button btAddProduct=(Button)popupView.findViewById(R.id.bt_add_product_bought);
         Button btCustomPrice=(Button)popupView.findViewById(R.id.button_custom_price);
         Button btDiscount=(Button)popupView.findViewById(R.id.button_custom_discount);
+        Button btExit=(Button)popupView.findViewById(R.id.btCloseDialogCustomPrice);
         RelativeLayout layoutDiscountOrCustomPrice=(RelativeLayout)popupView.findViewById(R.id.layout_discount_or_custom_price);
         ProductInCartItem currentProduct=MainActivity.listProductInCart.get(positionProduct);
         selectionProductPrice=currentProduct.getPriceProduct();
@@ -160,6 +161,7 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         btAddProduct.setOnClickListener(this);
         btSubtractProduct.setOnClickListener(this);
         layoutDiscountOrCustomPrice.setOnClickListener(this);
+        btExit.setOnClickListener(this);
     }
 
     public void addPopupWindowCustomDiscountAmount(boolean priceOrDiscount,int positonProduct){
@@ -245,18 +247,15 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if(popupWindowTwo!=null){
-            popupWindowTwo.dismiss();
-        }
-        if(popupWindowOne!=null){
-            popupWindowOne.dismiss();
-        }
         switch (v.getId()){
             case R.id.layout_customer_cart:
                 addListCustomerDiaLog();
                 break;
             case R.id.layout_add_cart_discount:
-                addOrEditDiscount(discountAlready);
+                if(MainActivity.listProductInCart.size()!=0) {
+                    addOrEditDiscount(discountAlready);
+                    updateRealPrice();
+                }
                 break;
             case R.id.button_create_customer:
                 mCallback.openDialogCustomerInfo(MainActivity.NO_CUSTOMER);
@@ -315,6 +314,7 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
                 break;
             case R.id.button_done_custom_price_discount:
                 doneCustomPriceOrDiscount();
+                updateRealPrice();
                 break;
             case R.id.button_back_custom_price_discount_amount:
                 popupWindowTwo.dismiss();
@@ -327,16 +327,27 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
                 break;
             case R.id.bt_add_product_bought:
                 addCurrentProduct();
+                updateRealPrice();
                 break;
             case R.id.bt_substract_product_bought:
                 substractCurrentProduct();
+                updateRealPrice();
+                break;
+            case R.id.btCloseDialogCustomPrice:
+                if(popupWindowTwo!=null)
+                    popupWindowTwo.dismiss();
+                if(popupWindowOne!=null)
+                    popupWindowOne.dismiss();
+                break;
         }
         
     }
 
     private void substractCurrentProduct() {
         int numberCurrentProduct=MainActivity.listProductInCart.get(positionSelectionProduct).getNumberProduct();
-        if(numberCurrentProduct>=1) {
+        if(numberCurrentProduct>1) {
+            totalPrice-=MainActivity.listProductInCart.get(positionSelectionProduct).getPriceProduct()/numberCurrentProduct;
+            tvTotalPrice.setText(totalPrice+"$");
             float newTotalPrice = MainActivity.listProductInCart.get(positionSelectionProduct).getPriceProduct() / numberCurrentProduct * (numberCurrentProduct -1);
             numberCurrentProduct--;
             editNumberProduct.setText(numberCurrentProduct+"");
@@ -347,12 +358,15 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
                 MainActivity.listProductInCart.remove(positionSelectionProduct);
             }
             listProductBoughtAdapter.notifyDataSetChanged();
+            updateRealPrice();
         }
     }
 
     private void addCurrentProduct() {
         int numberCurrentProduct=MainActivity.listProductInCart.get(positionSelectionProduct).getNumberProduct();
         if(numberCurrentProduct!=0) {
+            totalPrice+=MainActivity.listProductInCart.get(positionSelectionProduct).getPriceProduct()/numberCurrentProduct;
+            tvTotalPrice.setText(totalPrice+"$");
             float newTotalPrice = MainActivity.listProductInCart.get(positionSelectionProduct).getPriceProduct() / numberCurrentProduct * (numberCurrentProduct + 1);
             numberCurrentProduct++;
             editNumberProduct.setText(numberCurrentProduct + "");
@@ -360,6 +374,7 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
             MainActivity.listProductInCart.get(positionSelectionProduct).setPriceProduct(newTotalPrice);
             MainActivity.listProductInCart.get(positionSelectionProduct).setNumberProduct(numberCurrentProduct);
             listProductBoughtAdapter.notifyDataSetChanged();
+            updateRealPrice();
         }
     }
 
@@ -538,10 +553,11 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
         }
         else{
             float discountAmount=discount.getAmount()*totalPrice/100;
-            tvAmountDiscount.setText(discountAmount+"$");
+            tvAmountDiscount.setText(discountAmount+"%");
             this.discount=discountAmount;
         }
         currentDiscount=discount;
+        updateRealPrice();
 
     }
 
@@ -585,6 +601,13 @@ public class Fragment_Order_Cart extends Fragment implements View.OnClickListene
     }
 
     private void updateRealPrice() {
+        if(currentDiscount.getDiscountType()==DiscountType.MONEY) {
+            this.discount=currentDiscount.getAmount();
+        }
+        else{
+            float discountAmount=currentDiscount.getAmount()*totalPrice/100;
+            this.discount=discountAmount;
+        }
         realPrice=totalPrice-discount+tax;
         buttonCheckOut.setText("Checkout "+realPrice+"$");
 

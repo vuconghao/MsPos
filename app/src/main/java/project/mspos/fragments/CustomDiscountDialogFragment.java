@@ -279,6 +279,7 @@ public class CustomDiscountDialogFragment extends DialogFragment implements View
         return enoughInfo;
     }
 
+
     public interface ApplyDiscountInterface{
         public void applyDiscountDone(DiscountEntity discount);
         public void removeDiscount();
